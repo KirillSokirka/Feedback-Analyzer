@@ -203,6 +203,9 @@ csx/
 ecf/
 rcf/
 
+# Ignore JetBrains Rider specific directory
+.idea/
+
 # Windows Store app package directories and files
 AppPackages/
 BundleArtifacts/
@@ -387,7 +390,7 @@ MigrationBackup/
 # .idea/*.iml
 # .idea/modules
 
-/.idea/*
+/.idea/
 # CMake
 cmake-build-*/
 
