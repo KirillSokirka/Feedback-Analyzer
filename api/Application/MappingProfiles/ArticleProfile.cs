@@ -12,7 +12,7 @@ public class ArticleProfile : Profile
     public ArticleProfile()
     {
         CreateMap<Article, ArticleDto>()
-            .ForMember(x => x.Creator, expression => expression.MapFrom(x => x.Creator.Name));
+            .ForMember(x => x.Creator, expression => expression.MapFrom(x => x.Creator.FullName));
         CreateMap<Article, ArticleDetailDto>();
 
         CreateMap<CreateArticleCommand, Article>();
