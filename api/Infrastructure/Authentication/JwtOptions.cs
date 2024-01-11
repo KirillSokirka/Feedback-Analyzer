@@ -1,6 +1,6 @@
 ﻿namespace Infrastructure.Authentication;
 
-public class JwtSettings
+public class JwtOptions
 {
     public string SecretKey { get; set; } = null!;
     public string Issuer { get; set; } = null!;

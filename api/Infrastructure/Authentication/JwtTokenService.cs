@@ -6,8 +6,8 @@ using FeedbackAnalyzer.Application.Abstraction;
 using FeedbackAnalyzer.Application.Features.Token;
 using FeedbackAnalyzer.Application.Shared;
 using FeedbackAnalyzer.Application.Shared.EntityErrors;
-using Identity;
 using Identity.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -16,13 +16,16 @@ namespace Infrastructure.Authentication;
 
 public class JwtTokenService : IJwtTokenService
 {
-    private readonly JwtSettings _jwtSettings;
+    private readonly JwtOptions _jwtOptions;
+    private readonly JwtBearerOptions _jwtBearerOptions;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public JwtTokenService(IOptions<JwtSettings> jwtSettings, UserManager<ApplicationUser> userManager)
+    public JwtTokenService(IOptions<JwtOptions> jwtSettings, UserManager<ApplicationUser> userManager,
+        JwtBearerOptions jwtBearerOptions)
     {
-        _jwtSettings = jwtSettings.Value;
+        _jwtOptions = jwtSettings.Value;
         _userManager = userManager;
+        _jwtBearerOptions = jwtBearerOptions;
     }
 
     public async Task<Result<TokenDto>> GenerateTokenPairAsync(ApplicationUser user)
@@ -36,10 +39,10 @@ public class JwtTokenService : IJwtTokenService
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.UtcNow.AddHours(6),
             SigningCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtSettings.SecretKey)),
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey)),
                 SecurityAlgorithms.HmacSha256Signature),
-            Issuer = _jwtSettings.Issuer,
-            Audience = _jwtSettings.Audience
+            Issuer = _jwtOptions.Issuer,
+            Audience = _jwtOptions.Audience
         };
 
         var securityToken = tokenHandler.CreateToken(descriptor);
@@ -59,20 +62,20 @@ public class JwtTokenService : IJwtTokenService
         {
             return Result<TokenDto>.Failure(IdentityUserErrors.NotValidToken());
         }
-        
+
         var user = await _userManager.FindByEmailAsync(principal.FindFirstValue(ClaimTypes.Email)!);
 
         if (user is null)
         {
             return Result<TokenDto>.Failure(IdentityUserErrors.NotFound(principal.FindFirstValue(ClaimTypes.Email)!));
         }
-        
+
         if (user.RefreshToken != tokenModel.RefreshToken ||
             user.RefreshTokenExpiryTime <= DateTime.Now)
         {
             return Result<TokenDto>.Failure(IdentityUserErrors.NotValidToken());
         }
-        
+
         return await GenerateTokenPairAsync(user);
     }
 
@@ -107,26 +110,18 @@ public class JwtTokenService : IJwtTokenService
 
     private ClaimsPrincipal? GetPrincipalFromExpiredToken(string token)
     {
-        var tokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateAudience = true,
-            ValidateIssuer = true,
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey)),
-            ValidateLifetime = true
-        };
-
         var tokenHandler = new JwtSecurityTokenHandler();
 
-        var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
+        var principal = tokenHandler.ValidateToken(token,
+            _jwtBearerOptions.TokenValidationParameters,
+            out var securityToken);
 
         return CheckSecurityToken(securityToken) ? null : principal;
     }
 
     private static bool CheckSecurityToken(SecurityToken securityToken) =>
-        securityToken is not JwtSecurityToken jwtSecurityToken ||
-        !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
-            StringComparison.InvariantCultureIgnoreCase);
+        securityToken is JwtSecurityToken jwtSecurityToken &&
+        jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase);
 
     #endregion
 }
