@@ -51,14 +51,24 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<TokenDto
 
         var result = await _jwtTokenService.GenerateTokenPairAsync(identityUser);
 
-        if (result.IsSuccess)
+        if (result.IsFailure)
         {
-            identityUser.RefreshToken = result.Value.RefreshToken;
-            identityUser.RefreshTokenExpiryTime = DateTime.UtcNow.AddHours(6);
+            return Result<TokenDto>.Failure(result.Error);
+        }
+        
+        identityUser.RefreshToken = result.Value.RefreshToken;
+        identityUser.RefreshTokenExpiryTime = DateTime.UtcNow.AddHours(6);
 
+        var identityResult = await _userManager.UpdateAsync(identityUser);
+
+        if (identityResult.Succeeded)
+        {
             return result;
         }
 
-        return Result<TokenDto>.Failure(result.Error);
+        var error = identityResult.Errors.First();
+
+        return Result<TokenDto>.Failure(Error.Failure(error.Code, error.Description));
+
     }
 }

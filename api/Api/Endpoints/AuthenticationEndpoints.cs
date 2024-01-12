@@ -1,5 +1,7 @@
 ﻿using FeedbackAnalyzer.Api.Extensions;
+using FeedbackAnalyzer.Application.Features.Identity.Login;
 using FeedbackAnalyzer.Application.Features.Identity.Register;
+using FeedbackAnalyzer.Application.Features.Token;
 using MediatR;
 
 namespace FeedbackAnalyzer.Api.Endpoints;
@@ -13,6 +15,20 @@ public static class AuthenticationEndpoints
             var result = await sender.Send(command);
 
             return result.IsSuccess ? Results.Ok() : result.ToProblemDetails();
+        });
+        
+        app.MapPost("/login", async (LoginCommand command, ISender sender) =>
+        {
+            var result = await sender.Send(command);
+
+            return result.IsSuccess ? Results.Ok(result.Value) : result.ToProblemDetails();
+        });
+        
+        app.MapPost("/refresh-token", async (TokenRefreshCommand command, ISender sender) =>
+        {
+            var result = await sender.Send(command);
+
+            return result.IsSuccess ? Results.Ok(result.Value) : result.ToProblemDetails();
         });
     }
 }
