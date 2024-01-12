@@ -5,6 +5,7 @@ public class Result<TValue>
     public bool IsSuccess { get; }
     public bool IsFailure => !IsSuccess;
     public Error Error { get; }
+
     public TValue Value
     {
         get
@@ -33,9 +34,11 @@ public class Result<TValue>
         Error = error;
         _value = value!;
     }
-    
+
     public static Result<TValue> Success(TValue value) => new(true, value, Error.None);
     public static Result<TValue> Failure(Error error) => new(false, default, error);
-    
     public static implicit operator Result<TValue>(TValue value) => Success(value);
+
+    public T Match<T>(Func<TValue, T> successFunc, Func<Error, T> failureFunc)
+        => IsSuccess ? successFunc(_value) : failureFunc(Error);
 }

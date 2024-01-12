@@ -1,4 +1,6 @@
-﻿namespace FeedbackAnalyzer.Application.Shared;
+﻿using System.Text.Json.Serialization;
+
+namespace FeedbackAnalyzer.Application.Shared;
 
 public sealed record Error
 {
@@ -14,6 +16,8 @@ public sealed record Error
 
     public string Code { get; }
     public string Description { get; }
+    
+    [JsonIgnore]
     public ErrorType Type { get; }
 
     public static Error NotFound(string code, string description)

@@ -1,12 +1,14 @@
-﻿using FeedbackAnalyzer.Domain.Common;
+﻿using System.Linq.Expressions;
+using FeedbackAnalyzer.Domain.Common;
 
 namespace FeedbackAnalyzer.Application.Contracts.Persistence;
 
-public interface IGenericRepository<T> where T : BaseEntity
+public interface IGenericRepository<TEntity> where TEntity : BaseEntity
 {
-    Task<List<T>> GetAsync();
-    Task<T?> GetByIdAsync(string id);
-    Task<T> CreateAsync(T entity);
-    Task<T> UpdateAsync(T entity);
-    Task<T> DeleteAsync(T entity);
+    Task<List<TEntity>> GetAsync();
+    Task<TEntity?> GetByIdAsync(string id);
+    Task<List<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate);
+    Task CreateAsync(TEntity entity);
+    Task UpdateAsync(TEntity entity);
+    Task DeleteAsync(TEntity entity);
 }

@@ -21,11 +21,11 @@ public class JwtTokenService : IJwtTokenService
     private readonly UserManager<ApplicationUser> _userManager;
 
     public JwtTokenService(IOptions<JwtOptions> jwtSettings, UserManager<ApplicationUser> userManager,
-        JwtBearerOptions jwtBearerOptions)
+        IOptions<JwtBearerOptions> jwtBearerOptions)
     {
         _jwtOptions = jwtSettings.Value;
         _userManager = userManager;
-        _jwtBearerOptions = jwtBearerOptions;
+        _jwtBearerOptions = jwtBearerOptions.Value;
     }
 
     public async Task<Result<TokenDto>> GenerateTokenPairAsync(ApplicationUser user)

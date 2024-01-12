@@ -6,8 +6,15 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace FeedbackAnalyzer.Api.OptionsSetup;
 
-public class JwtBearerOptionsSetup(JwtOptions jwtOptions) : IConfigureOptions<JwtBearerOptions>
+public class JwtBearerOptionsSetup : IConfigureOptions<JwtBearerOptions>
 {
+    private readonly JwtOptions _jwtOptions;
+
+    public JwtBearerOptionsSetup(IOptions<JwtOptions> jwtOptions)
+    {
+        _jwtOptions = jwtOptions.Value;
+    }
+    
     public void Configure(JwtBearerOptions options)
     {
         options.TokenValidationParameters = new()
@@ -16,9 +23,9 @@ public class JwtBearerOptionsSetup(JwtOptions jwtOptions) : IConfigureOptions<Jw
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = jwtOptions.Issuer,
-            ValidAudience = jwtOptions.Audience,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
+            ValidIssuer = _jwtOptions.Issuer,
+            ValidAudience = _jwtOptions.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey))
         };
     }
 }

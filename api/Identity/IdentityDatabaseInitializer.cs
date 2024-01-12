@@ -1,16 +1,17 @@
-﻿using Identity.Models;
+﻿using Identity.DbContext;
+using Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Identity.Seed;
+namespace Identity;
 
 public static class IdentityDatabaseInitializer
 {
     public static async Task Initialize(IServiceProvider serviceProvider)
     {
-        var identityContext = serviceProvider.GetRequiredService<IdentityDbContext>();
+        var identityContext = serviceProvider.GetRequiredService<IdentityDatabaseContext>();
 
         if ((await identityContext.Database.GetPendingMigrationsAsync()).Any())
         {

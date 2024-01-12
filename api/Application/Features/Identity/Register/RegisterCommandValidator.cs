@@ -18,7 +18,7 @@ public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
 
         RuleFor(p => p.FullName)
             .NotEmpty()
-            .WithMessage("Fullname should not be null/empty");
+            .WithState(_ => Error.Validation("User.Fullname.InvalidFormat", "The fullname should not be empty"));
 
         RuleFor(p => p.Email)
             .NotEmpty()
