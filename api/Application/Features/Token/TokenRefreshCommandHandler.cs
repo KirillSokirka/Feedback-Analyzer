@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using FeedbackAnalyzer.Application.Abstraction;
+using FeedbackAnalyzer.Application.Contracts.Services;
 using FeedbackAnalyzer.Application.Shared;
 using Identity.Models;
 using MediatR;

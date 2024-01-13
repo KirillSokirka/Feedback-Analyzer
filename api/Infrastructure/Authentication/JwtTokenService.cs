@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using FeedbackAnalyzer.Application.Abstraction;
+using FeedbackAnalyzer.Application.Contracts.Services;
 using FeedbackAnalyzer.Application.Features.Token;
 using FeedbackAnalyzer.Application.Shared;
 using FeedbackAnalyzer.Application.Shared.EntityErrors;

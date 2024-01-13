@@ -13,7 +13,7 @@ public class ApplicationDatabaseContext: Microsoft.EntityFrameworkCore.DbContext
     public DbSet<Article> Articles { get; set; } 
     public DbSet<Comment> Comments { get; set; }
     public DbSet<User> Users { get; set; }
-    
+    public DbSet<FeedbackSentiment> FeedbackSentiments { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -27,6 +27,7 @@ public class ApplicationDatabaseContext: Microsoft.EntityFrameworkCore.DbContext
         modelBuilder.Entity<Article>().HasKey(e => e.Id);
         modelBuilder.Entity<Comment>().HasKey(e => e.Id);
         modelBuilder.Entity<User>().HasKey(e => e.Id);
+        modelBuilder.Entity<FeedbackSentiment>().HasKey(e => e.Id);
     }
 
     private static void ConfigureRelationships(ModelBuilder modelBuilder)
@@ -47,6 +48,20 @@ public class ApplicationDatabaseContext: Microsoft.EntityFrameworkCore.DbContext
             .HasOne(c => c.Commentator)
             .WithMany(u => u.LeavedComments)
             .HasForeignKey(c => c.CommentatorId)
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        modelBuilder.Entity<FeedbackSentiment>()
+            .HasOne<Article>()
+            .WithMany(a => a.Feedbacks)
+            .HasForeignKey(f => f.ArticleId)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<FeedbackSentiment>()
+            .HasOne<User>()
+            .WithMany(u => u.Feedbacks)
+            .HasForeignKey(f => f.UserId)
+            .IsRequired(false)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }

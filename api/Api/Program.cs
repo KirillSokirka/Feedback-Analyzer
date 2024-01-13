@@ -1,11 +1,10 @@
 using FeedbackAnalyzer.Api.Endpoints;
 using FeedbackAnalyzer.Api.OptionsSetup;
 using FeedbackAnalyzer.Application;
-using FeedbackAnalyzer.Application.Abstraction;
 using Identity;
 using Identity.DbContext;
 using Identity.Models;
-using Infrastructure.Authentication;
+using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -36,11 +35,11 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.ConfigureOptions<JwtOptionsSetup>();
 builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
-
-builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.ConfigureOptions<TextAnalyticsOptionsSetup>();
 
 builder.Services.AddPersistenceServices();
 builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureServices();
 
 var app = builder.Build();
 

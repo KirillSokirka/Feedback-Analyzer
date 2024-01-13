@@ -2,7 +2,7 @@
 using FeedbackAnalyzer.Application.Shared;
 using Identity.Models;
 
-namespace FeedbackAnalyzer.Application.Abstraction;
+namespace FeedbackAnalyzer.Application.Contracts.Services;
 
 public interface IJwtTokenService
 {

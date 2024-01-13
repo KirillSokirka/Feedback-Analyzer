@@ -12,7 +12,6 @@ public class UpdateCommentCommandHandler : IRequestHandler<UpdateCommentCommand,
     private readonly ICommentRepository _commentRepository;
     private readonly IMapper _mapper;
 
-
     public UpdateCommentCommandHandler(IValidator<UpdateCommentCommand> validator, ICommentRepository commentRepository,
         IMapper mapper)
     {

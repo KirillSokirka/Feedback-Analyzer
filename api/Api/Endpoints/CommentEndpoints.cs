@@ -38,7 +38,7 @@ public static class CommentEndpoints
         app.MapDelete("/articles/{articleId}/comments/{commentId}", async ([FromRoute] string articleId,
             [FromRoute] string commentId, [FromServices] ISender sender) =>
         {
-            var result = await sender.Send(new DeleteCommentCommand(commentId));
+            var result = await sender.Send(new DeleteCommentCommand(commentId, articleId));
 
             return result.IsSuccess ? Results.NoContent() : result.ToProblemDetails();
         });
