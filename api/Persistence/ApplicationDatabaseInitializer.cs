@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FeedbackAnalyzer.Domain;
+using Identity.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence.DbContext;
 
@@ -6,13 +8,34 @@ namespace Persistence;
 
 public static class ApplicationDatabaseInitializer
 {
-    public static async Task Initialize(IServiceProvider serviceProvider)
+    public static async Task Initialize(IServiceProvider serviceProvider, ApplicationUser? applicationUser)
     {
-        var identityContext = serviceProvider.GetRequiredService<ApplicationDatabaseContext>();
+        var applicationContext = serviceProvider.GetRequiredService<ApplicationDatabaseContext>();
 
-        if ((await identityContext.Database.GetPendingMigrationsAsync()).Any())
+        if ((await applicationContext.Database.GetPendingMigrationsAsync()).Any())
         {
-            await identityContext.Database.MigrateAsync();
+            await applicationContext.Database.MigrateAsync();
+        }
+
+        await SeedTestUser(applicationUser, applicationContext);
+    }
+
+    private static async Task SeedTestUser(ApplicationUser? applicationUser,
+        ApplicationDatabaseContext applicationContext)
+    {
+        if (applicationUser is not null)
+        {
+            if (applicationContext.Users.FirstOrDefault(u => applicationUser.Id == u.Id) is null)
+            {
+                var user = new User
+                {
+                    Id = applicationUser.Id,
+                    FullName = applicationUser.FullName
+                };
+
+                applicationContext.Users.Add(user);
+                await applicationContext.SaveChangesAsync();
+            }
         }
     }
 }

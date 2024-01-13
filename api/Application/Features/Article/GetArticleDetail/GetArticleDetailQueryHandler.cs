@@ -16,16 +16,14 @@ public class GetArticleDetailQueryHandler : IRequestHandler<GetArticleDetailQuer
         _articleRepository = articleRepository;
         _mapper = mapper;
     }
-    
-    public async Task<Result<ArticleDetailDto>> Handle(GetArticleDetailQuery request, CancellationToken cancellationToken)
+
+    public async Task<Result<ArticleDetailDto>> Handle(GetArticleDetailQuery request,
+        CancellationToken cancellationToken)
     {
         var article = await _articleRepository.GetByIdAsync(request.Id);
 
-        if (article is null)
-        {
-            return Result<ArticleDetailDto>.Failure(ArticleErrors.NotFound(request.Id));
-        }
-        
-        return _mapper.Map<ArticleDetailDto>(article);
+        return article is null
+            ? Result<ArticleDetailDto>.Failure(ArticleErrors.NotFound(request.Id))
+            : _mapper.Map<ArticleDetailDto>(article);
     }
 }

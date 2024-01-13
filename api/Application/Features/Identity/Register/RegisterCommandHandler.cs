@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FeedbackAnalyzer.Application.Contracts.Persistence;
 using FeedbackAnalyzer.Application.Shared;
-using FeedbackAnalyzer.Domain;
 using FluentValidation;
 using Identity.Models;
 using MediatR;
@@ -11,13 +10,13 @@ namespace FeedbackAnalyzer.Application.Features.Identity.Register;
 
 public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Result<Unit>>
 {
-    private readonly AbstractValidator<RegisterCommand> _validator;
+    private readonly IValidator<RegisterCommand> _validator;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
 
     public RegisterCommandHandler(IUserRepository userRepository, UserManager<ApplicationUser> userManager,
-        AbstractValidator<RegisterCommand> validator, IMapper mapper)
+        IValidator<RegisterCommand> validator, IMapper mapper)
     {
         _userRepository = userRepository;
         _userManager = userManager;
@@ -40,7 +39,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Result<Un
 
         if (creationResult.Succeeded)
         {
-            var user = _mapper.Map<User>(identityUser);
+            var user = _mapper.Map<Domain.User>(identityUser);
 
             await _userRepository.CreateAsync(user);
             

@@ -12,13 +12,13 @@ namespace FeedbackAnalyzer.Application.Features.Identity.Login;
 public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<TokenDto>>
 {
     private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly AbstractValidator<LoginCommand> _validator;
+    private readonly IValidator<LoginCommand> _validator;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IJwtTokenService _jwtTokenService;
 
     public LoginCommandHandler(UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager, IJwtTokenService jwtTokenService,
-        AbstractValidator<LoginCommand> validator)
+        IValidator<LoginCommand> validator)
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -57,7 +57,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<TokenDto
         }
         
         identityUser.RefreshToken = result.Value.RefreshToken;
-        identityUser.RefreshTokenExpiryTime = DateTime.UtcNow.AddHours(6);
+        identityUser.RefreshTokenExpiryTime = DateTime.Now.AddHours(6);
 
         var identityResult = await _userManager.UpdateAsync(identityUser);
 

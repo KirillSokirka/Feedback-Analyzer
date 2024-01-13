@@ -37,7 +37,7 @@ public class JwtTokenService : IJwtTokenService
         var descriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddHours(6),
+            Expires = DateTime.Now.AddHours(6),
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey)),
                 SecurityAlgorithms.HmacSha256Signature),
@@ -116,7 +116,7 @@ public class JwtTokenService : IJwtTokenService
             _jwtBearerOptions.TokenValidationParameters,
             out var securityToken);
 
-        return CheckSecurityToken(securityToken) ? null : principal;
+        return CheckSecurityToken(securityToken) ? principal : null;
     }
 
     private static bool CheckSecurityToken(SecurityToken securityToken) =>

@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using FeedbackAnalyzer.Application.Contracts.Persistence;
+using FeedbackAnalyzer.Application.Shared;
 using MediatR;
 
 namespace FeedbackAnalyzer.Application.Features.Article.GetAllArticles;
 
-public class GetArticlesQueryHandler : IRequestHandler<GetArticlesQuery, List<ArticleDto>>
+public class GetArticlesQueryHandler : IRequestHandler<GetArticlesQuery, Result<List<ArticleDto>>>
 {
     private readonly IArticleRepository _articleRepository;
     private readonly IMapper _mapper;
@@ -15,7 +16,7 @@ public class GetArticlesQueryHandler : IRequestHandler<GetArticlesQuery, List<Ar
         _mapper = mapper;
     }
 
-    public async Task<List<ArticleDto>> Handle(GetArticlesQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<ArticleDto>>> Handle(GetArticlesQuery request, CancellationToken cancellationToken)
     {
         var articles = await _articleRepository.GetAsync();
 

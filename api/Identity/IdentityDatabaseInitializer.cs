@@ -9,7 +9,7 @@ namespace Identity;
 
 public static class IdentityDatabaseInitializer
 {
-    public static async Task Initialize(IServiceProvider serviceProvider)
+    public static async Task<ApplicationUser?> Initialize(IServiceProvider serviceProvider)
     {
         var identityContext = serviceProvider.GetRequiredService<IdentityDatabaseContext>();
 
@@ -22,7 +22,7 @@ public static class IdentityDatabaseInitializer
         var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
         await SeedRolesAsync(roleManager);
-        await SeedTestUserAsync(userManager);
+        return await SeedTestUserAsync(userManager);
     }
 
     private static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
@@ -40,11 +40,11 @@ public static class IdentityDatabaseInitializer
         }
     }
 
-    private static async Task SeedTestUserAsync(UserManager<ApplicationUser> userManager)
+    private static async Task<ApplicationUser?> SeedTestUserAsync(UserManager<ApplicationUser> userManager)
     {
         const string email = "admin@google.com";
         const string userName = "administrator";
-        const string password = "password1";
+        const string password = "Password1!";
 
         if (await userManager.FindByEmailAsync(email) == null)
         {
@@ -65,7 +65,11 @@ public static class IdentityDatabaseInitializer
                 {
                     await userManager.AddToRoleAsync(user, roleName);
                 }
+                
+                return user;
             }
         }
+        
+        return null;
     }
 }

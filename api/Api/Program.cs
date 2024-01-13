@@ -52,8 +52,9 @@ if (app.Environment.IsDevelopment())
 
 using (var scope = app.Services.CreateScope())
 {
-    await IdentityDatabaseInitializer.Initialize(scope.ServiceProvider);
-    await ApplicationDatabaseInitializer.Initialize(scope.ServiceProvider);
+    var administrator = await IdentityDatabaseInitializer.Initialize(scope.ServiceProvider);
+    
+    await ApplicationDatabaseInitializer.Initialize(scope.ServiceProvider, administrator);
 }
 
 app.UseHttpsRedirection();
@@ -62,5 +63,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.AddAuthenticationEndpoints();
+app.AddArticleEndpoints();
+app.AddCommentEndpoints();
 
 app.Run();

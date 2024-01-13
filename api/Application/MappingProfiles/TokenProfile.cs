@@ -7,6 +7,6 @@ public class TokenProfile : Profile
 {
     public TokenProfile()
     {
-        CreateMap<RefreshTokenDto, TokenRefreshCommand>();
+        CreateMap<TokenRefreshCommand, RefreshTokenDto>();
     }
 }

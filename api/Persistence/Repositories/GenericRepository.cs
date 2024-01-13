@@ -17,7 +17,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
         DbSet = context.Set<TEntity>();
     }
     
-    public async Task<List<TEntity>> GetAsync()
+    public virtual async Task<List<TEntity>> GetAsync()
         => await DbSet.ToListAsync();
     
     public virtual async Task<TEntity?> GetByIdAsync(string id)
@@ -26,20 +26,20 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
     public virtual async Task<List<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
         => await DbSet.AsNoTracking().Where(predicate).ToListAsync();
     
-    public async Task CreateAsync(TEntity entity)
+    public virtual async Task CreateAsync(TEntity entity)
     {
         await DbSet.AddAsync(entity);
         await Context.SaveChangesAsync();
     }
 
-    async Task IGenericRepository<TEntity>.UpdateAsync(TEntity entity)
+    public virtual async  Task UpdateAsync(TEntity entity)
     {
         DbSet.Attach(entity);
         Context.Entry(entity).State = EntityState.Modified;
         await Context.SaveChangesAsync();
     }
 
-    async Task IGenericRepository<TEntity>.DeleteAsync(TEntity entity)
+    public virtual async Task DeleteAsync(TEntity entity)
     {
         DbSet.Remove(entity);
         await Context.SaveChangesAsync();
