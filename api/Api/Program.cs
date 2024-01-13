@@ -64,5 +64,6 @@ app.UseAuthorization();
 app.AddAuthenticationEndpoints();
 app.AddArticleEndpoints();
 app.AddCommentEndpoints();
+app.AddFeedbackEndpoints();
 
 app.Run();

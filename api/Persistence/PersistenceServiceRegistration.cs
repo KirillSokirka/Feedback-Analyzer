@@ -13,7 +13,8 @@ public static class PersistenceServiceRegistration
         services.AddScoped<ICommentRepository, CommentRepository>();
         services.AddScoped<IArticleRepository, ArticleRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
-
+        services.AddScoped<IFeedbackSentimentRepository, FeedbackSentimentRepository>();
+        
         return services;
     }
 }

@@ -1,6 +1,8 @@
-﻿using Azure.AI.TextAnalytics;
+﻿using Azure;
+using Azure.AI.TextAnalytics;
 using FeedbackAnalyzer.Application.Contracts.DTOs;
 using FeedbackAnalyzer.Application.Contracts.Services;
+using FeedbackAnalyzer.Application.Shared;
 using Microsoft.Extensions.Options;
 
 namespace Infrastructure.TextAnalytics;
@@ -8,15 +10,24 @@ namespace Infrastructure.TextAnalytics;
 public class TextAnalyticsService : ITextAnalyticsService
 {
     private readonly TextAnalyticsClient _analyticsClient;
-
+    
     public TextAnalyticsService(IOptions<TextAnalyticsOptions> options)
     {
         _analyticsClient = new TextAnalyticsClient(options.Value.Endpoint, options.Value.SecretKey);
     }
 
-    public async Task<SentimentDto> CreateAverageSentiment(IEnumerable<string> texts)
+    public async Task<Result<SentimentDto>> CreateAverageSentimentAsync(IEnumerable<string> texts)
     {
-        var response = await _analyticsClient.AnalyzeSentimentBatchAsync(texts);
+        Response<AnalyzeSentimentResultCollection> response;
+        
+        try
+        {
+            response = await _analyticsClient.AnalyzeSentimentBatchAsync(texts);
+        }
+        catch (RequestFailedException e)
+        {
+            return Result<SentimentDto>.Failure(Error.Failure(e.ErrorCode ?? "500", e.Message));
+        }
 
         var results = response.Value;
 
@@ -39,9 +50,19 @@ public class TextAnalyticsService : ITextAnalyticsService
         };
     }
 
-    public async Task<SentimentDto> CreateSentiment(string text)
+    public async Task<Result<SentimentDto>> CreateSentimentAsync(string text)
     {
-        var response = await _analyticsClient.AnalyzeSentimentAsync(text);
+        Response<DocumentSentiment> response;
+        
+        try
+        {
+            response = await _analyticsClient.AnalyzeSentimentAsync(text);
+        }
+        catch (RequestFailedException e)
+        {
+            return Result<SentimentDto>.Failure(Error.Failure(e.ErrorCode ?? "500", e.Message));
+        }
+        
         var sentiment = response.Value;
 
         return new SentimentDto
