@@ -14,12 +14,10 @@ import useAuthContext from "../../context/hooks";
 const Sidebar = () => {
   const { user, logoutUser } = useAuthContext();
 
-  console.log(user);
-
   return (
     <Container>
       <SContent>
-        {user ? <h2>Hello {user.fullname}!</h2> : <h1>Hello ......</h1>}
+        {user && <h2>Hello {user.fullname}!</h2>}
         <SLinks>
           <Link label="Articles" route="/" />
           {user && (

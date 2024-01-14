@@ -14,28 +14,17 @@ const RegisterPage = () => {
   return (
     <FullPageContainer>
       <StyledForm onSubmit={registerUser}>
-        <StyledInput
-          type="text"
-          name="email"
-          placeholder="Enter email"
-          required
-        />
+        <StyledInput type="text" name="email" placeholder="Email" required />
         <StyledInput
           type="text"
           name="username"
-          placeholder="Enter username"
+          placeholder="Full name"
           required
         />
         <StyledInput
           type="password"
           name="password"
-          placeholder="Enter password"
-          required
-        />
-        <StyledInput
-          type="password"
-          name="confirmPassword"
-          placeholder="Confirm password"
+          placeholder="Password"
           required
         />
         <StyledButton type="submit">Register</StyledButton>

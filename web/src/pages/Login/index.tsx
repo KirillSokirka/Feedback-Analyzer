@@ -13,12 +13,8 @@ const LoginPage = () => {
   return (
     <FullPageContainer>
       <StyledForm onSubmit={loginUser}>
-        <StyledInput type="text" name="email" placeholder="Enter email" />
-        <StyledInput
-          type="password"
-          name="password"
-          placeholder="Enter password"
-        />
+        <StyledInput type="text" name="email" placeholder="Email" />
+        <StyledInput type="password" name="password" placeholder="Password" />
         <StyledButton type="submit">Login</StyledButton>
       </StyledForm>
     </FullPageContainer>
