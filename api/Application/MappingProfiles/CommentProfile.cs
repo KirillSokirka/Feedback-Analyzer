@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FeedbackAnalyzer.Application.Contracts.DTOs;
 using FeedbackAnalyzer.Application.Features.Comment;
 using FeedbackAnalyzer.Application.Features.Comment.CreateComment;
 using FeedbackAnalyzer.Application.Features.Comment.UpdateComment;

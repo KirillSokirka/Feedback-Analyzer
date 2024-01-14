@@ -41,7 +41,7 @@ public static class CommentEndpoints
         {
             var result = await sender.Send(new DeleteCommentCommand(commentId, articleId));
 
-            return result.IsSuccess ? Results.NoContent() : result.ToProblemDetails();
+            return result.IsSuccess ? Results.Ok() : result.ToProblemDetails();
         });
     }
 }

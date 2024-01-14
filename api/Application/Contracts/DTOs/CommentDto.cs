@@ -1,4 +1,4 @@
-﻿namespace FeedbackAnalyzer.Application.Features.Comment;
+﻿namespace FeedbackAnalyzer.Application.Contracts.DTOs;
 
 public class CommentDto
 {
