@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FeedbackAnalyzer.Application.Contracts.DTOs;
 using FeedbackAnalyzer.Application.Contracts.Persistence;
 using FeedbackAnalyzer.Application.Shared;
 using FeedbackAnalyzer.Application.Shared.EntityErrors;

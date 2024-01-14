@@ -1,4 +1,4 @@
-﻿namespace FeedbackAnalyzer.Application.Features.User;
+﻿namespace FeedbackAnalyzer.Application.Contracts.DTOs;
 
 public class UserDto
 {

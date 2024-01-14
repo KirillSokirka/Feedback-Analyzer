@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FeedbackAnalyzer.Application.Contracts.DTOs;
 using FeedbackAnalyzer.Application.Features.Article.CreateArticle;
 using FeedbackAnalyzer.Application.Features.Article.GetAllArticles;
 using FeedbackAnalyzer.Application.Features.Article.GetArticleDetail;

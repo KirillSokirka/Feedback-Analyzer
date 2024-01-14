@@ -28,20 +28,19 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
     
     public virtual async Task CreateAsync(TEntity entity)
     {
-        await DbSet.AddAsync(entity);
+        await Context.AddAsync(entity);
         await Context.SaveChangesAsync();
     }
 
     public virtual async  Task UpdateAsync(TEntity entity)
     {
-        DbSet.Attach(entity);
         Context.Entry(entity).State = EntityState.Modified;
         await Context.SaveChangesAsync();
     }
 
     public virtual async Task DeleteAsync(TEntity entity)
     {
-        DbSet.Remove(entity);
+        Context.Remove(entity);
         await Context.SaveChangesAsync();
     }
 }

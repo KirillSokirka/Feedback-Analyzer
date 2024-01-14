@@ -1,4 +1,4 @@
-﻿namespace FeedbackAnalyzer.Application.Features.Article.GetAllArticles;
+﻿namespace FeedbackAnalyzer.Application.Contracts.DTOs;
 
 public class ArticleDto
 {

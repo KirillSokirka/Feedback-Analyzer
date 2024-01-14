@@ -1,7 +1,6 @@
 ﻿using FeedbackAnalyzer.Application.Features.Comment;
-using FeedbackAnalyzer.Application.Features.User;
 
-namespace FeedbackAnalyzer.Application.Features.Article.GetArticleDetail;
+namespace FeedbackAnalyzer.Application.Contracts.DTOs;
 
 public record ArticleDetailDto
 {

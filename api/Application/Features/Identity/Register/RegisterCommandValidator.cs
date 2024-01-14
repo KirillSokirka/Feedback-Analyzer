@@ -26,7 +26,7 @@ public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
             .EmailAddress()
             .WithState(_ => Error.Validation("User.Email.InvalidFormat", "The email format is invalid."))
             .MustAsync(EmailShouldBeUnique)
-            .WithState(_ => IdentityUserErrors.Conflict());
+            .WithState(_ => UserErrors.Conflict());
 
         RuleFor(p => p.Password)
             .NotEmpty()

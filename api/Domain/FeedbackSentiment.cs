@@ -22,7 +22,7 @@ public class FeedbackSentiment : BaseEntity
     public void SetUserFeedback(string userId)
     {
         UserId = userId;
-        Type = FeedbackType.UserComments;
+        Type = FeedbackType.UserArticles;
     }
 
     public void SetArticleCommentsFeedback(string? articleId)
@@ -36,5 +36,5 @@ public enum FeedbackType
 {
     Article = 0,
     ArticleComments = 1,
-    UserComments = 2
+    UserArticles = 2
 }

@@ -3,6 +3,7 @@ using FeedbackAnalyzer.Application.Features.Identity.Login;
 using FeedbackAnalyzer.Application.Features.Identity.Register;
 using FeedbackAnalyzer.Application.Features.Token;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FeedbackAnalyzer.Api.Endpoints;
 
@@ -24,7 +25,8 @@ public static class AuthenticationEndpoints
             return result.IsSuccess ? Results.Ok(result.Value) : result.ToProblemDetails();
         });
         
-        app.MapPost("/refresh-token", async (TokenRefreshCommand command, ISender sender) =>
+        app.MapPost("/refresh-token", [Authorize]
+            async (TokenRefreshCommand command, ISender sender) =>
         {
             var result = await sender.Send(command);
 

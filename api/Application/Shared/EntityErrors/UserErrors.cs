@@ -1,7 +1,9 @@
 ﻿namespace FeedbackAnalyzer.Application.Shared.EntityErrors;
 
-public static class IdentityUserErrors
+public static class UserErrors
 {
+    public static Error NotFoundById(string id) =>
+        Error.NotFound("User.NotFound", $"The user with Id = {id} was not found");
     public static Error NotFound(string email) => 
         Error.NotFound("User.NotFound", $"The user with Email = {email} was not found");
     public static Error NotValidCredential(string email) =>

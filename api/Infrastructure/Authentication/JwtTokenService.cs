@@ -40,7 +40,7 @@ public class JwtTokenService : IJwtTokenService
             Expires = DateTime.Now.AddHours(6),
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey)),
-                SecurityAlgorithms.HmacSha256Signature),
+                SecurityAlgorithms.HmacSha256),
             Issuer = _jwtOptions.Issuer,
             Audience = _jwtOptions.Audience
         };
@@ -60,20 +60,20 @@ public class JwtTokenService : IJwtTokenService
 
         if (principal?.FindFirstValue(ClaimTypes.Email) is null)
         {
-            return Result<TokenDto>.Failure(IdentityUserErrors.NotValidToken());
+            return Result<TokenDto>.Failure(UserErrors.NotValidToken());
         }
 
         var user = await _userManager.FindByEmailAsync(principal.FindFirstValue(ClaimTypes.Email)!);
 
         if (user is null)
         {
-            return Result<TokenDto>.Failure(IdentityUserErrors.NotFound(principal.FindFirstValue(ClaimTypes.Email)!));
+            return Result<TokenDto>.Failure(UserErrors.NotFound(principal.FindFirstValue(ClaimTypes.Email)!));
         }
 
         if (user.RefreshToken != tokenModel.RefreshToken ||
             user.RefreshTokenExpiryTime <= DateTime.Now)
         {
-            return Result<TokenDto>.Failure(IdentityUserErrors.NotValidToken());
+            return Result<TokenDto>.Failure(UserErrors.NotValidToken());
         }
 
         return await GenerateTokenPairAsync(user);

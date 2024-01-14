@@ -5,6 +5,7 @@ using FeedbackAnalyzer.Application.Features.Article.GetAllArticles;
 using FeedbackAnalyzer.Application.Features.Article.GetArticleDetail;
 using FeedbackAnalyzer.Application.Features.Article.UpdateArticle;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeedbackAnalyzer.Api.Endpoints;
@@ -27,21 +28,23 @@ public static class ArticleEndpoints
             return result.IsSuccess ? Results.Ok(result.Value) : result.ToProblemDetails();
         });
 
-        app.MapPost("/articles", async ([FromBody] CreateArticleCommand command, [FromServices] ISender sender) =>
-        {
-            var result = await sender.Send(command);
+        app.MapPost("/articles", [Authorize]
+            async ([FromBody] CreateArticleCommand command, [FromServices] ISender sender) =>
+            {
+                var result = await sender.Send(command);
 
-            return result.IsSuccess ? Results.Ok() : result.ToProblemDetails();
-        });
+                return result.IsSuccess ? Results.Ok() : result.ToProblemDetails();
+            });
 
-        app.MapPut("/articles", async ([FromBody] UpdateArticleCommand command, [FromServices] ISender sender) =>
-        {
-            var result = await sender.Send(command);
+        app.MapPut("/articles", [Authorize]
+            async ([FromBody] UpdateArticleCommand command, [FromServices] ISender sender) =>
+            {
+                var result = await sender.Send(command);
 
-            return result.IsSuccess ? Results.Ok() : result.ToProblemDetails();
-        });
-        
-        app.MapDelete("/articles/{id}", async ([FromRoute] string id, [FromServices] ISender sender) =>
+                return result.IsSuccess ? Results.Ok() : result.ToProblemDetails();
+            });
+
+        app.MapDelete("/articles/{id}", [Authorize] async ([FromRoute] string id, [FromServices] ISender sender) =>
         {
             var result = await sender.Send(new DeleteArticleCommand(id));
 

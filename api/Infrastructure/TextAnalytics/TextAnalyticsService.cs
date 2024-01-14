@@ -39,7 +39,7 @@ public class TextAnalyticsService : ITextAnalyticsService
             CalculateAverageConfidence(results.Select(x => x.DocumentSentiment.ConfidenceScores.Negative).ToList());
 
         var overallSentiment =
-            DetermineOverallSentiment(averagePositiveScore, averageNeutralScore, averageNegativeScore);
+            DetermineOverallSentiment(averagePositiveScore, averageNegativeScore, averageNeutralScore);
 
         return new SentimentDto
         {

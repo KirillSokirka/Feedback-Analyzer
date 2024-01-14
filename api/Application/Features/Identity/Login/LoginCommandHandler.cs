@@ -39,14 +39,14 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<TokenDto
 
         if (identityUser is null)
         {
-            return Result<TokenDto>.Failure(IdentityUserErrors.NotFound(request.Email));
+            return Result<TokenDto>.Failure(UserErrors.NotFound(request.Email));
         }
 
         var loginResult = await _signInManager.CheckPasswordSignInAsync(identityUser, request.Password, false);
 
         if (loginResult.Succeeded == false)
         {
-            return Result<TokenDto>.Failure(IdentityUserErrors.NotValidCredential(request.Email));
+            return Result<TokenDto>.Failure(UserErrors.NotValidCredential(request.Email));
         }
 
         var result = await _jwtTokenService.GenerateTokenPairAsync(identityUser);

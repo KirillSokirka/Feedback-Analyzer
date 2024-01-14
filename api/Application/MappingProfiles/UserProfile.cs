@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FeedbackAnalyzer.Application.Contracts.DTOs;
 using FeedbackAnalyzer.Application.Features.Identity.Register;
 using FeedbackAnalyzer.Application.Features.User;
 using FeedbackAnalyzer.Domain;
@@ -16,6 +17,7 @@ public class UserProfile : Profile
             .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.FullName.Replace(" ", "")));
 
         CreateMap<User, UserDto>();
-
+        
+        CreateMap<User, UserDetailDto>();
     }
 }
