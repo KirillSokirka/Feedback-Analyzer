@@ -3,6 +3,7 @@ using Azure.AI.TextAnalytics;
 using FeedbackAnalyzer.Application.Contracts.DTOs;
 using FeedbackAnalyzer.Application.Contracts.Services;
 using FeedbackAnalyzer.Application.Shared;
+using FeedbackAnalyzer.Domain;
 using Microsoft.Extensions.Options;
 
 namespace Infrastructure.TextAnalytics;
@@ -43,7 +44,7 @@ public class TextAnalyticsService : ITextAnalyticsService
 
         return new SentimentDto
         {
-            Sentiment = overallSentiment,
+            Sentiment = MapSentimentType(overallSentiment),
             PositiveScore = averagePositiveScore,
             NeutralScore = averageNeutralScore,
             NegativeScore = averageNegativeScore
@@ -67,7 +68,7 @@ public class TextAnalyticsService : ITextAnalyticsService
 
         return new SentimentDto
         {
-            Sentiment = sentiment.Sentiment.ToString(),
+            Sentiment = MapSentimentType(sentiment.Sentiment.ToString()),
             PositiveScore = sentiment.ConfidenceScores.Positive,
             NeutralScore = sentiment.ConfidenceScores.Neutral,
             NegativeScore = sentiment.ConfidenceScores.Negative
@@ -87,6 +88,15 @@ public class TextAnalyticsService : ITextAnalyticsService
 
     private static double CalculateAverageConfidence(IReadOnlyCollection<double> scores)
         => scores.Count > 0 ? scores.Sum() / scores.Count : 0;
+
+    private static SentimentType MapSentimentType(string sentiment)
+        => sentiment switch
+        {
+            "Positive" => SentimentType.Positive,
+            "Negative" => SentimentType.Negative,
+            "Neutral" => SentimentType.Neutral,
+            _ => SentimentType.Empty
+        };
 
     #endregion
 }

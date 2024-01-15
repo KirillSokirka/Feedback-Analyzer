@@ -10,14 +10,14 @@ import {
 
 import { ARTICLES, ARTICLE } from "./urls";
 
-export const getArticles = async (): Promise<ArticleDto[] | null> => {
+export const getArticles = async (): Promise<ArticleDto[] | null | boolean> => {
   const response = await defaultFetch<ArticleDto[]>(ARTICLES);
   return processResponse(response);
 };
 
 export const getArticleById = async (
   id: string
-): Promise<ArticleDetailDto | null> => {
+): Promise<ArticleDetailDto | null | boolean> => {
   const response = await defaultFetch<ArticleDetailDto>(`${ARTICLE(id)}`);
   return processResponse(response);
 };
@@ -25,7 +25,7 @@ export const getArticleById = async (
 export const postArticle = async (
   article: CreateArticleCommand,
   token: string
-): Promise<string | null> => {
+): Promise<string | null | boolean> => {
   const response = await protectedFetch<string>(ARTICLES, token, {
     method: "post",
     data: article,
@@ -36,8 +36,8 @@ export const postArticle = async (
 export const updateArticle = async (
   article: UpdateArticleCommand,
   token: string
-): Promise<string | null> => {
-  const response = await protectedFetch<string>(ARTICLES, token, {
+): Promise<boolean | null | boolean> => {
+  const response = await protectedFetch<boolean>(ARTICLES, token, {
     method: "put",
     data: article,
   });
@@ -47,8 +47,8 @@ export const updateArticle = async (
 export const deleteArticle = async (
   id: string,
   token: string
-): Promise<null | null> => {
-  const response = await protectedFetch<null>(`${ARTICLE(id)}`, token, {
+): Promise<boolean | null | boolean> => {
+  const response = await protectedFetch<boolean>(`${ARTICLE(id)}`, token, {
     method: "delete",
   });
   return processResponse(response);

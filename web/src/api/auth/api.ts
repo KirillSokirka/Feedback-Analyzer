@@ -12,7 +12,7 @@ import {
 export const login = async (
   email: string,
   password: string
-): Promise<JwtTokens | null> => {
+): Promise<JwtTokens | null | boolean> => {
   const response = await defaultFetch<JwtTokens>(LOGIN_URL, {
     method: "post",
     data: { email, password },
@@ -25,7 +25,7 @@ export const register = async (
   email: string,
   username: string,
   password: string
-): Promise<void | null> => {
+): Promise<void | null | boolean> => {
   const response = await defaultFetch<void>(REGISTER_URL, {
     method: "post",
     data: { email, username, password },
@@ -37,7 +37,7 @@ export const register = async (
 export const refreshToken = async (
   email: string,
   tokens: JwtTokens
-): Promise<JwtTokens | null> => {
+): Promise<JwtTokens | null | boolean> => {
   const response = await protectedFetch<JwtTokens>(
     REFRESH_URL,
     tokens.accessToken,

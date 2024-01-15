@@ -18,6 +18,7 @@ public class ArticleProfile : Profile
         CreateMap<Article, ArticleDetailDto>();
 
         CreateMap<CreateArticleCommand, Article>()
+            .ForMember(dest => dest.CreatorId, opt => opt.MapFrom(src => src.CreatorId))
             .ForMember(dest => dest.Created, opt => opt.MapFrom(src => DateTime.Now));
 
         CreateMap<UpdateArticleCommand, Article>()

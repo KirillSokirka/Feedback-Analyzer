@@ -27,5 +27,5 @@ public class CreateArticleCommandValidator : AbstractValidator<CreateArticleComm
     }
 
     private async Task<bool> CreatorShouldExist(string creatorId, CancellationToken ct)
-        => await _userRepository.GetByIdAsync(creatorId) is not null;
+        => (await _userRepository.FindAsync(u => u.IdentityId == creatorId)).FirstOrDefault() is not null;
 }

@@ -1,7 +1,7 @@
 ﻿using FeedbackAnalyzer.Api.Extensions;
-using FeedbackAnalyzer.Application.Features.Comment.CreateCommentsFeedbackByArticle;
 using FeedbackAnalyzer.Application.Features.Feedback;
 using FeedbackAnalyzer.Application.Features.Feedback.CreateArticleFeedback;
+using FeedbackAnalyzer.Application.Features.Feedback.CreateCommentsFeedbackByArticle;
 using FeedbackAnalyzer.Application.Features.Feedback.CreateUserArticlesFeedback;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -13,7 +13,7 @@ public static class FeedbackEndpoints
 {
     public static void AddFeedbackEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapPost("/articles/{articleId}/feedback", [Authorize] async ([FromRoute] string articleId,
+        app.MapGet("/articles/{articleId}/feedback", async ([FromRoute] string articleId,
             [FromServices] ISender sender) =>
         {
             var result = await sender.Send(new CreateArticleFeedbackCommand(articleId));
@@ -23,7 +23,7 @@ public static class FeedbackEndpoints
                 : result.ToProblemDetails();
         });
 
-        app.MapPost("/articles/{articleId}/comments/feedback", [Authorize] async ([FromRoute] string articleId,
+        app.MapGet("/articles/{articleId}/comments/feedback", async ([FromRoute] string articleId,
             [FromServices] ISender sender) =>
         {
             var result = await sender.Send(new CreateCommentsFeedbackCommand(articleId));
@@ -33,7 +33,7 @@ public static class FeedbackEndpoints
                 : result.ToProblemDetails();
         });
 
-        app.MapPost("/users/{userId}/articles/feedback", [Authorize] async ([FromRoute] string userId,
+        app.MapGet("/users/{userId}/articles/feedback", [Authorize] async ([FromRoute] string userId,
             [FromServices] ISender sender) =>
         {
             var result = await sender.Send(new CreateUserArticlesFeedbackCommand(userId));

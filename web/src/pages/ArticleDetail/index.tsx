@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import {
   Title,
@@ -10,33 +13,121 @@ import {
   PageContent,
   Text,
   Edited,
+  CommentsSectionContainer,
 } from "./styles";
 
+import {
+  ArticleDetailDto,
+  deleteArticle,
+  getArticleById,
+} from "../../api/articles";
+import useAuthContext from "../../context/hooks";
+import { getFormatedDate } from "../../utils/date";
+import CommentsSection from "../../components/CommentSection";
+import ArticleStatistic from "../../components/ArticleStatistic";
+
+import { postComment, updateComment, deleteComment } from "../../api/comments";
+import { StyledButton } from "../../components/GlobalStyles";
+
 const ArticleDetail = () => {
+  const [comment, setComment] = useState("");
+  const [article, setArticle] = useState<ArticleDetailDto | null>(null);
+
+  const { articleId } = useParams();
+  const navigate = useNavigate();
+  const { user, jwtTokens } = useAuthContext();
+
+  const handleCreateComment = async (value: string) => {
+    if (articleId && user && jwtTokens) {
+      await postComment(articleId, value, user?.id!!, jwtTokens?.accessToken!!);
+      await getResponse();
+    }
+  };
+
+  const handleUpdateComment = async (text: string, commentId: string) => {
+    if (articleId && user && jwtTokens) {
+      await updateComment(articleId, text, commentId, jwtTokens.accessToken);
+      await getResponse();
+    }
+  };
+
+  const handleDeleteComment = async (commentId: string) => {
+    if (articleId && user && jwtTokens) {
+      await deleteComment(articleId, commentId, jwtTokens.accessToken);
+      await getResponse();
+    }
+  };
+
+  async function getResponse() {
+    if (articleId) {
+      const result = await getArticleById(articleId);
+      setArticle(result as ArticleDetailDto);
+    }
+  }
+
+  const handleDeleteArticle = async () => {
+    if (articleId && jwtTokens) {
+      const result = await deleteArticle(articleId, jwtTokens.accessToken);
+      if (!result) {
+        toast.success("Article deleted successfully!");
+        navigate("/");
+      }
+    }
+  };
+
+  useEffect(() => {
+    getResponse();
+  }, [articleId]);
+
   return (
     <PageContainer>
-      <Header>
-        <HeaderTitle>Tasker Settings</HeaderTitle>
-        <HeaderActions>
-          <Edited>edited - </Edited>
-          <ActionItem>Edit</ActionItem>
-          <ActionItem>Delete</ActionItem>
-        </HeaderActions>
-      </Header>
-      <PageContent>
-        <Title>Tasker Settings</Title>
-        <Text>
-          Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry. Lorem Ipsum has been the industry's standard dummy text ever
-          since the 1500s, when an unknown printer took a galley of type and
-          scrambled it to make a type specimen book. It has survived not only
-          five centuries, but also the leap into electronic typesetting,
-          remaining essentially unchanged. It was popularised in the 1960s with
-          the release of Letraset sheets containing Lorem Ipsum passages, and
-          more recently with desktop publishing software like Aldus PageMaker
-          including versions of Lorem Ipsum.
-        </Text>
-      </PageContent>
+      {article && (
+        <>
+          <Header>
+            <HeaderTitle>{article.title}</HeaderTitle>
+            <ArticleStatistic articleId={article.id} />
+            <HeaderActions>
+              <Edited>edited - {getFormatedDate(article.updated)}</Edited>
+              {user && (
+                <>
+                  <ActionItem>
+                    <StyledButton
+                      width="75px"
+                      padding="8px 12px"
+                      onClick={() => navigate("/articles/edit/" + articleId)}
+                    >
+                      Edit
+                    </StyledButton>
+                  </ActionItem>
+                  <ActionItem>
+                    <StyledButton
+                      width="75px"
+                      padding="8px 12px"
+                      onClick={handleDeleteArticle}
+                    >
+                      Delete
+                    </StyledButton>
+                  </ActionItem>
+                </>
+              )}
+            </HeaderActions>
+          </Header>
+          <PageContent>
+            <Title>{article.title}</Title>
+            <Text>{article.content}</Text>
+            <CommentsSectionContainer>
+              <CommentsSection
+                comments={article.comments || []}
+                comment={comment}
+                setComment={setComment}
+                updateComment={handleUpdateComment}
+                deleteComment={handleDeleteComment}
+                postComment={handleCreateComment}
+              />
+            </CommentsSectionContainer>
+          </PageContent>
+        </>
+      )}
     </PageContainer>
   );
 };

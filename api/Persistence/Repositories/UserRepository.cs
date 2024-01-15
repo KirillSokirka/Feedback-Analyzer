@@ -1,4 +1,5 @@
-﻿using FeedbackAnalyzer.Application.Contracts.Persistence;
+﻿using System.Linq.Expressions;
+using FeedbackAnalyzer.Application.Contracts.Persistence;
 using FeedbackAnalyzer.Domain;
 using Microsoft.EntityFrameworkCore;
 using Persistence.DbContext;
@@ -17,4 +18,11 @@ public class UserRepository : GenericRepository<User>, IUserRepository
             .AsNoTracking()
             .Include(a => a.Articles)
             .FirstOrDefaultAsync(p => p.Id == id);
+
+    public override Task<List<User>> FindAsync(Expression<Func<User, bool>> predicate)
+        => DbSet
+            .AsNoTracking()
+            .Include(a => a.Articles)
+            .Where(predicate)
+            .ToListAsync();
 }

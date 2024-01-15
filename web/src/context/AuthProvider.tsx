@@ -84,7 +84,7 @@ export const AuthProvider = ({ children }: Props) => {
     const data = await login(email, password);
 
     if (data) {
-      updateAuthStates(data);
+      updateAuthStates(data as JwtTokens);
       navigate("/");
     }
   };

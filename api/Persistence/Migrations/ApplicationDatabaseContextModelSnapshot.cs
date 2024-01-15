@@ -101,9 +101,8 @@ namespace Persistence.Migrations
                     b.Property<double>("PositiveScore")
                         .HasColumnType("float");
 
-                    b.Property<string>("Sentiment")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Sentiment")
+                        .HasColumnType("int");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -126,6 +125,10 @@ namespace Persistence.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IdentityId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

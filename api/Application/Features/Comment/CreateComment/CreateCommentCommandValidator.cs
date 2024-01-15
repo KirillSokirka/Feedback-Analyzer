@@ -33,5 +33,5 @@ public class CreateCommentCommandValidator : AbstractValidator<CreateCommentComm
         => await _articleRepository.GetByIdAsync(id) is not null;
     
     private async Task<bool> CommentatorShouldExist(string creatorId, CancellationToken ct)
-        => await _userRepository.GetByIdAsync(creatorId) is not null;
+        => (await _userRepository.FindAsync(u => u.IdentityId == creatorId)).FirstOrDefault() is not null;
 }

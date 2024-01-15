@@ -33,13 +33,6 @@ export interface ArticleDto {
   updated: Date;
 }
 
-export interface SentimentDto {
-  sentiment: string;
-  positiveScore: number;
-  neutralScore: number;
-  negativeScore: number;
-}
-
 export interface UserDetailDto extends UserDto {
   articles?: ArticleDto[];
 }

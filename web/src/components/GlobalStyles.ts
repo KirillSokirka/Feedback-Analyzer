@@ -16,22 +16,33 @@ const GlobalStyles = createGlobalStyle`
   }
 `;
 
-export const StyledInput = styled.input`
-  width: 225px;
-  font-size: 22px;
+interface StyledInputProps {
+  width?: string;
+  fontSize?: string;
+}
+
+export const StyledInput = styled.input<StyledInputProps>`
+  width: ${props => props.width || "225px"};
+  font-size: ${props => props.fontSize || "22px"};
   border-top: 0;
   border-left: 0;
   border-right: 0;
-  border-color: #ccc;
+  border-bottom: 1px solid #ccc;
 
   &:focus {
     outline: none;
+    border-color: #aaa;
   }
 `;
 
-export const StyledButton = styled.button`
-  width: 225px;
-  padding: 12px 20px;
+interface StyledButtonProps {
+  width?: string;
+  padding?: string;
+}
+
+export const StyledButton = styled.button<StyledButtonProps>`
+  width: ${props => props.width || "225px"};
+  padding: ${props => props.padding || "12px 20px"};
   font-size: 14px;
   font-weight: normal;
   line-height: 16px;
@@ -73,6 +84,14 @@ export const FullPageContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+export const GradientText = styled.h4`
+  background: linear-gradient(to right, red, blue);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline;
 `;
 
 export default GlobalStyles;

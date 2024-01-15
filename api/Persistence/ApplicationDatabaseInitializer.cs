@@ -25,11 +25,12 @@ public static class ApplicationDatabaseInitializer
     {
         if (applicationUser is not null)
         {
-            if (applicationContext.Users.FirstOrDefault(u => applicationUser.Id == u.Id) is null)
+            if (applicationContext.Users.FirstOrDefault(u => applicationUser.Id == u.IdentityId) is null)
             {
                 var user = new User
                 {
-                    Id = applicationUser.Id,
+                    Id = Guid.NewGuid().ToString(),
+                    IdentityId = applicationUser.Id,
                     FullName = applicationUser.FullName
                 };
 

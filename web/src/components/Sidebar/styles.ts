@@ -14,6 +14,10 @@ const SContent = styled.div`
   justify-content: space-between;
 `;
 
+const StatisticContainer = styled.div`
+  margin-top: 20px;
+`;
+
 const SLinks = styled.div`
   margin-top: 30px;
   display: flex;
@@ -33,4 +37,11 @@ const SAuthLinks = styled.div`
   flex-direction: row;
 `;
 
-export { Container, SContent, SLinks, SBottomLinks, SAuthLinks };
+export {
+  Container,
+  SContent,
+  SLinks,
+  SBottomLinks,
+  SAuthLinks,
+  StatisticContainer,
+};

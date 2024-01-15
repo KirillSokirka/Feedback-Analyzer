@@ -8,10 +8,13 @@ namespace FeedbackAnalyzer.Application.Features.Article.DeleteArticle;
 public class DeleteArticleCommandHandler : IRequestHandler<DeleteArticleCommand, Result<bool>>
 {
     private readonly IArticleRepository _articleRepository;
+    private readonly IFeedbackSentimentRepository _feedbackRepository;
 
-    public DeleteArticleCommandHandler(IArticleRepository articleRepository)
+    public DeleteArticleCommandHandler(IArticleRepository articleRepository,
+        IFeedbackSentimentRepository feedbackRepository)
     {
         _articleRepository = articleRepository;
+        _feedbackRepository = feedbackRepository;
     }
 
     public async Task<Result<bool>> Handle(DeleteArticleCommand request, CancellationToken cancellationToken)
@@ -21,6 +24,13 @@ public class DeleteArticleCommandHandler : IRequestHandler<DeleteArticleCommand,
         if (article is null)
         {
             return Result<bool>.Failure(ArticleErrors.NotFound(request.Id));
+        }
+
+        var commentsToDelete = await _feedbackRepository.FindAsync(c => c.ArticleId == article.Id);
+
+        foreach (var comment in commentsToDelete)
+        {
+            await _feedbackRepository.DeleteAsync(comment);
         }
 
         await _articleRepository.DeleteAsync(article);

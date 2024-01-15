@@ -27,7 +27,7 @@ public class Result<TValue>
             !isSuccess && error == Error.None ||
             isSuccess && value is null)
         {
-            throw new ArgumentException("Invalid error", nameof(error));
+            throw new ArgumentException("Invalid argument error", nameof(error));
         }
 
         IsSuccess = isSuccess;

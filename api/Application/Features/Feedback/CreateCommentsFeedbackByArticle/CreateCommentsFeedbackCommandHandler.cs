@@ -1,7 +1,6 @@
 ﻿using FeedbackAnalyzer.Application.Contracts.DTOs;
 using FeedbackAnalyzer.Application.Contracts.Persistence;
 using FeedbackAnalyzer.Application.Contracts.Services;
-using FeedbackAnalyzer.Application.Features.Comment.CreateCommentsFeedbackByArticle;
 using FeedbackAnalyzer.Application.Shared;
 using FeedbackAnalyzer.Application.Shared.EntityErrors;
 using MediatR;
@@ -9,7 +8,7 @@ using MediatR;
 namespace FeedbackAnalyzer.Application.Features.Feedback.CreateCommentsFeedbackByArticle;
 
 public class
-    CreateCommentsFeedbackCommandHandler : IRequestHandler<CreateCommentsFeedbackCommand, Result<SentimentDto?>>
+    CreateCommentsFeedbackCommandHandler : IRequestHandler<CreateCommentsFeedbackCommand, Result<SentimentDto>>
 {
     private readonly IArticleRepository _articleRepository;
     private readonly IFeedbackService _feedbackService;
@@ -20,7 +19,7 @@ public class
         _feedbackService = feedbackService;
     }
 
-    public async Task<Result<SentimentDto?>> Handle(CreateCommentsFeedbackCommand request,
+    public async Task<Result<SentimentDto>> Handle(CreateCommentsFeedbackCommand request,
         CancellationToken cancellationToken)
     {
         var article = await _articleRepository.GetByIdAsync(request.ArticleId);
@@ -32,6 +31,6 @@ public class
 
         var feedback = await _feedbackService.GetArticleCommentsFeedbackAsync(article);
 
-        return feedback.IsSuccess ? feedback : Result<SentimentDto?>.Failure(feedback.Error);
+        return feedback.IsSuccess ? feedback : Result<SentimentDto>.Failure(feedback.Error);
     }
 }

@@ -50,11 +50,11 @@ public class FeedbackService : IFeedbackService
         return _mapper.Map<SentimentDto>(feedback);
     }
     
-    public async Task<Result<SentimentDto?>> GetArticleCommentsFeedbackAsync(Article article)
+    public async Task<Result<SentimentDto>> GetArticleCommentsFeedbackAsync(Article article)
     {
-        if (article.Comments is null)
+        if (article.Comments?.Any() is false)
         {
-            return null!;
+            return SentimentDto.Empty();
         }
         
         var lastCreatedComment = article.Comments.MaxBy(c => c.Created);
@@ -72,7 +72,7 @@ public class FeedbackService : IFeedbackService
 
         if (analysisResult.IsFailure)
         {
-            return Result<SentimentDto?>.Failure(analysisResult.Error);
+            return Result<SentimentDto>.Failure(analysisResult.Error);
         }
 
         feedback = _mapper.Map<FeedbackSentiment>(analysisResult.Value);
@@ -84,13 +84,13 @@ public class FeedbackService : IFeedbackService
         return analysisResult!;
     }
     
-    public async Task<Result<SentimentDto?>> GetUserArticlesFeedbackAsync(User user)
+    public async Task<Result<SentimentDto>> GetUserArticlesFeedbackAsync(User user)
     {
         var userArticles = await _articleRepository.FindAsync(a => a.CreatorId == user.Id);
 
         if (!userArticles.Any())
         {
-            return null!;
+            return SentimentDto.Empty();
         }
 
         var lastArticleCreated = userArticles.MaxBy(a => a.Created);
@@ -113,7 +113,7 @@ public class FeedbackService : IFeedbackService
 
         if (analysisResult.IsFailure)
         {
-            return Result<SentimentDto?>.Failure(analysisResult.Error);
+            return Result<SentimentDto>.Failure(analysisResult.Error);
         }
 
         feedback = _mapper.Map<FeedbackSentiment>(analysisResult.Value);

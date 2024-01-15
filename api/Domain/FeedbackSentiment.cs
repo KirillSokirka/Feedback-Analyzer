@@ -8,7 +8,7 @@ public class FeedbackSentiment : BaseEntity
     public string? UserId { get; private set; }
     public FeedbackType Type { get; private set; }
     public DateTime Created { get; set; } = DateTime.Now;
-    public required string Sentiment { get; set; }
+    public required FeedbackType Sentiment { get; set; }
     public double PositiveScore { get; set; }
     public double NeutralScore { get; set; }
     public double NegativeScore { get; set; }
@@ -37,4 +37,12 @@ public enum FeedbackType
     Article = 0,
     ArticleComments = 1,
     UserArticles = 2
+}
+
+public enum SentimentType
+{
+    Positive = 0,
+    Negative = 1,
+    Neutral = 2,
+    Empty = 4,
 }

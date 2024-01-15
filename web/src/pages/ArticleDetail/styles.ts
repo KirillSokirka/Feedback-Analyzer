@@ -18,7 +18,10 @@ const HeaderActions = styled.div`
   gap: 10px;
 `;
 
-const Edited = styled.div``;
+const Edited = styled.div`
+  font-size: 14px;
+  color: grey;
+`;
 
 const ActionItem = styled.div``;
 
@@ -48,6 +51,10 @@ const Text = styled.div`
   grid-column: 2 / 3;
 `;
 
+const CommentsSectionContainer = styled.div`
+  grid-column: 2 / 3;
+`;
+
 export {
   Title,
   PageContainer,
@@ -58,4 +65,5 @@ export {
   PageContent,
   Text,
   Edited,
+  CommentsSectionContainer,
 };

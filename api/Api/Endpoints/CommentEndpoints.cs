@@ -1,4 +1,5 @@
 ﻿using FeedbackAnalyzer.Api.Extensions;
+using FeedbackAnalyzer.Application.Contracts.DTOs;
 using FeedbackAnalyzer.Application.Features.Comment.CreateComment;
 using FeedbackAnalyzer.Application.Features.Comment.DeleteComment;
 using FeedbackAnalyzer.Application.Features.Comment.UpdateComment;
@@ -28,10 +29,10 @@ public static class CommentEndpoints
 
         app.MapPut("/articles/{articleId}/comments/{commentId}", [Authorize] async ([FromRoute] string articleId,
             [FromRoute] string commentId,
-            [FromBody] string text,
+            [FromBody] UpdateCommentDto commentDto,
             [FromServices] ISender sender) =>
         {
-            var result = await sender.Send(new UpdateCommentCommand(commentId, text, articleId));
+            var result = await sender.Send(new UpdateCommentCommand(commentId, commentDto.Text, articleId));
 
             return result.IsSuccess ? Results.Ok() : result.ToProblemDetails();
         });

@@ -21,6 +21,6 @@ public class ArticleRepository : GenericRepository<Article>, IArticleRepository
         => await DbSet
             .AsNoTracking()
             .Include(a => a.Creator)
-            .Include(a => a.Comments).ThenInclude(a => a.Commentator)
+            .Include(a => a.Comments).ThenInclude(a => a.Commentator).AsNoTracking()
             .FirstOrDefaultAsync(p => p.Id == id);
 }

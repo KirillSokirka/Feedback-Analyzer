@@ -33,7 +33,7 @@ public static class ArticleEndpoints
             {
                 var result = await sender.Send(command);
 
-                return result.IsSuccess ? Results.Ok() : result.ToProblemDetails();
+                return result.IsSuccess ? Results.Ok(result.Value) : result.ToProblemDetails();
             });
 
         app.MapPut("/articles", [Authorize]

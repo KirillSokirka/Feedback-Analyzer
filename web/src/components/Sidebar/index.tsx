@@ -5,11 +5,12 @@ import {
   SBottomLinks,
   SContent,
   SLinks,
-  SAuthLinks,
+  StatisticContainer,
 } from "./styles";
 
 import { Link } from "../Link";
 import useAuthContext from "../../context/hooks";
+import UserStatistic from "../UserStatistic";
 
 const Sidebar = () => {
   const { user, logoutUser } = useAuthContext();
@@ -18,12 +19,14 @@ const Sidebar = () => {
     <Container>
       <SContent>
         {user && <h2>Hello {user.fullname}!</h2>}
+        <StatisticContainer>
+          <UserStatistic />
+        </StatisticContainer>
         <SLinks>
           <Link label="Articles" route="/" />
           {user && (
             <>
-              <Link label="Create article" route="/" />
-              <Link label="My Statistic" route="/" />
+              <Link label="Create article" route="/articles/create" />
             </>
           )}
         </SLinks>
