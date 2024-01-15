@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -37,35 +37,44 @@ const ArticleDetail = () => {
   const navigate = useNavigate();
   const { user, jwtTokens } = useAuthContext();
 
-  const handleCreateComment = async (value: string) => {
-    if (articleId && user && jwtTokens) {
-      await postComment(articleId, value, user?.id!!, jwtTokens?.accessToken!!);
-      await getResponse();
-    }
-  };
-
-  const handleUpdateComment = async (text: string, commentId: string) => {
-    if (articleId && user && jwtTokens) {
-      await updateComment(articleId, text, commentId, jwtTokens.accessToken);
-      await getResponse();
-    }
-  };
-
-  const handleDeleteComment = async (commentId: string) => {
-    if (articleId && user && jwtTokens) {
-      await deleteComment(articleId, commentId, jwtTokens.accessToken);
-      await getResponse();
-    }
-  };
-
-  async function getResponse() {
+  const getResponse = useCallback(async () => {
     if (articleId) {
       const result = await getArticleById(articleId);
       setArticle(result as ArticleDetailDto);
     }
-  }
+  }, [articleId]);
 
-  const handleDeleteArticle = async () => {
+  const handleCreateComment = useCallback(
+    async (value: string) => {
+      if (articleId && user && jwtTokens) {
+        await postComment(articleId, value, user.id, jwtTokens.accessToken);
+        await getResponse();
+      }
+    },
+    [articleId, user, jwtTokens, getResponse]
+  );
+
+  const handleUpdateComment = useCallback(
+    async (text: string, commentId: string) => {
+      if (articleId && user && jwtTokens) {
+        await updateComment(articleId, text, commentId, jwtTokens.accessToken);
+        await getResponse();
+      }
+    },
+    [articleId, user, jwtTokens, getResponse]
+  );
+
+  const handleDeleteComment = useCallback(
+    async (commentId: string) => {
+      if (articleId && user && jwtTokens) {
+        await deleteComment(articleId, commentId, jwtTokens.accessToken);
+        await getResponse();
+      }
+    },
+    [articleId, user, jwtTokens, getResponse]
+  );
+
+  const handleDeleteArticle = useCallback(async () => {
     if (articleId && jwtTokens) {
       const result = await deleteArticle(articleId, jwtTokens.accessToken);
       if (!result) {
@@ -73,11 +82,11 @@ const ArticleDetail = () => {
         navigate("/");
       }
     }
-  };
+  }, [articleId, jwtTokens, navigate]);
 
   useEffect(() => {
     getResponse();
-  }, [articleId]);
+  }, [getResponse]);
 
   return (
     <PageContainer>

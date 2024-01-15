@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 
 import {
   PageContainer,
@@ -22,11 +22,14 @@ const ArticleCreate = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
-  const handleTitleChange = (event: any) => {
-    setTitle(event.target.value);
-  };
+  const handleTitleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setTitle(event.target.value);
+    },
+    []
+  );
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     if (user && jwtTokens) {
       const article = {
         title: title,
@@ -38,11 +41,10 @@ const ArticleCreate = () => {
 
       if (response) {
         toast.success("Article posted successfully!");
-        console.log(response);
         navigate("/");
       }
     }
-  };
+  }, [user, jwtTokens, title, content, navigate]);
 
   return (
     <PageContainer>

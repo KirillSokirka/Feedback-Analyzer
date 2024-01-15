@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import { SentimentType } from "../api/statitstic";
 
 export const getEmoji = (sentiment: SentimentType) => {

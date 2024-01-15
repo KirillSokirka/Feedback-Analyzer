@@ -16,15 +16,15 @@ const ArticlesList = () => {
   const navigate = useNavigate();
   const [articles, setArticles] = useState<ArticleDto[] | null>(null);
 
-  async function getResponse() {
-    const result = await getArticles();
-
-    if (result) {
-      setArticles(result as ArticleDto[]);
-    }
-  }
-
   useEffect(() => {
+    async function getResponse() {
+      const result = await getArticles();
+
+      if (result) {
+        setArticles(result as ArticleDto[]);
+      }
+    }
+
     getResponse();
   }, []);
 

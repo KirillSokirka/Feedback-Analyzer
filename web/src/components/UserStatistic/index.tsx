@@ -30,7 +30,7 @@ const UserStatistic = () => {
     };
 
     fetchFeedback();
-  }, [user]);
+  }, [user, jwtTokens]);
 
   return (
     <Container>

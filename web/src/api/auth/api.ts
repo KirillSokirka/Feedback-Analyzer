@@ -2,12 +2,7 @@ import { LOGIN_URL, REFRESH_URL, REGISTER_URL } from "./urls";
 
 import { JwtTokens } from "./interfaces";
 
-import {
-  defaultFetch,
-  protectedFetch,
-  processResponse,
-  ProblemDetails,
-} from "../common";
+import { defaultFetch, protectedFetch, processResponse } from "../common";
 
 export const login = async (
   email: string,

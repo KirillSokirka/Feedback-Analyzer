@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 
 import { CommentDto } from "../../api/articles";
 import { StyledButton } from "../GlobalStyles";
@@ -36,42 +36,51 @@ const CommentsSection = ({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState("");
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setComment(event.target.value);
-  };
+  const handleInputChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setComment(event.target.value);
+    },
+    []
+  );
 
-  const handleEditChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEditText(event.target.value);
-  };
+  const handleEditChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setEditText(event.target.value);
+    },
+    []
+  );
 
-  const handlePostCommentClick = () => {
+  const handlePostCommentClick = useCallback(() => {
     if (comment.trim()) {
       postComment(comment);
       setComment("");
     }
-  };
+  }, [comment]);
 
-  const handleUpdateClick = (commentId: string) => {
-    if (editText.trim()) {
-      updateComment(editText, commentId);
-      setEditingId(null);
-      setEditText("");
-    }
-  };
+  const handleUpdateClick = useCallback(
+    (commentId: string) => {
+      if (editText.trim()) {
+        updateComment(editText, commentId);
+        setEditingId(null);
+        setEditText("");
+      }
+    },
+    [editText]
+  );
 
-  const handleDeleteClick = (commentId: string) => {
+  const handleDeleteClick = useCallback((commentId: string) => {
     deleteComment(commentId);
-  };
+  }, []);
 
-  const handleEditClick = (comment: CommentDto) => {
+  const handleEditClick = useCallback((comment: CommentDto) => {
     setEditingId(comment.id);
     setEditText(comment.text);
-  };
+  }, []);
 
-  const handleCancelClick = () => {
+  const handleCancelClick = useCallback(() => {
     setEditingId(null);
     setEditText("");
-  };
+  }, []);
 
   return (
     <Container>

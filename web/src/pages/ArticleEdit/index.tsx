@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -30,23 +30,28 @@ const ArticleEdit = () => {
   const navigate = useNavigate();
   const { articleId } = useParams();
 
-  useEffect(() => {
-    getResponse();
+  const getResponse = useCallback(async () => {
+    if (articleId) {
+      const result = await getArticleById(articleId);
+      if (result) {
+        setTitle((result as ArticleDetailDto).title);
+        setContent((result as ArticleDetailDto).content);
+      }
+    }
   }, [articleId]);
 
-  async function getResponse() {
-    if (articleId) {
-      const result = (await getArticleById(articleId)) as ArticleDetailDto;
-      setTitle(result.title);
-      setContent(result.content);
-    }
-  }
+  useEffect(() => {
+    getResponse();
+  }, [getResponse]);
 
-  const handleTitleChange = (event: any) => {
-    setTitle(event.target.value);
-  };
+  const handleTitleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setTitle(event.target.value);
+    },
+    []
+  );
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     if (user && jwtTokens && articleId) {
       const article: UpdateArticleCommand = {
         id: articleId,
@@ -61,7 +66,7 @@ const ArticleEdit = () => {
         navigate("/");
       }
     }
-  };
+  }, [user, jwtTokens, articleId, title, content, navigate]);
 
   return (
     <PageContainer>

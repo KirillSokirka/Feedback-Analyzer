@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { ApiResponse, ProblemDetails } from "./interfaces";
 
 export const defaultFetch = async <T>(

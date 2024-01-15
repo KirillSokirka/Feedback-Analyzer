@@ -1,4 +1,3 @@
-import { JwtTokens } from "../auth";
 import { defaultFetch, processResponse, protectedFetch } from "../common";
 
 import { SentimentDto } from "./interfaces";

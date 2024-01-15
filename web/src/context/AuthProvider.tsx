@@ -10,7 +10,6 @@ import {
   JwtTokens,
   User,
 } from "../api/auth/";
-import { ProblemDetails } from "../api/common";
 
 interface Props {
   children: ReactNode;
