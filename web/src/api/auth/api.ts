@@ -18,12 +18,12 @@ export const login = async (
 
 export const register = async (
   email: string,
-  username: string,
+  fullname: string,
   password: string
 ): Promise<void | null | boolean> => {
   const response = await defaultFetch<void>(REGISTER_URL, {
     method: "post",
-    data: { email, username, password },
+    data: { email, fullname, password },
   });
 
   return processResponse(response);
