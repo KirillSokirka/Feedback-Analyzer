@@ -20,7 +20,12 @@ public record GetUserDetailQueryHandler : IRequestHandler<GetUserDetailQuery, Re
 
     public async Task<Result<UserDetailDto>> Handle(GetUserDetailQuery request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByIdAsync(request.Id);
+        if (request.Id is null)
+        {
+            return Result<UserDetailDto>.Failure(UserErrors.NotValidToken()); 
+        }
+        
+        var user = (await _userRepository.FindAsync(u => u.IdentityId == request.Id)).FirstOrDefault();
 
         return user is not null
             ? _mapper.Map<UserDetailDto>(user)

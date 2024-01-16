@@ -4,4 +4,4 @@ using MediatR;
 
 namespace FeedbackAnalyzer.Application.Features.User.GetUserDetail;
 
-public record GetUserDetailQuery(string Id) : IRequest<Result<UserDetailDto>>;
+public record GetUserDetailQuery(string? Id) : IRequest<Result<UserDetailDto>>;

@@ -1,7 +1,5 @@
 ﻿using System.Reflection;
 using FeedbackAnalyzer.Application.Contracts.Services;
-using FeedbackAnalyzer.Application.Features.Identity.Login;
-using FeedbackAnalyzer.Application.Features.Identity.Register;
 using FeedbackAnalyzer.Application.Services;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;

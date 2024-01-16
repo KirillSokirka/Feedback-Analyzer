@@ -10,11 +10,14 @@ public static class UserEndpoints
 {
     public static void AddUserEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/users/{id}", [Authorize] async ([FromRoute] string id, [FromServices] ISender sender) =>
-        {
-            var result = await sender.Send(new GetUserDetailQuery(id));
+        app.MapGet("/users/info", [Authorize]
+            async ([FromServices] ISender sender, HttpContext context) =>
+            {
+                var userId = context.User.FindFirst("uid")?.Value;
 
-            return result.IsSuccess ? Results.Ok(result.Value) : result.ToProblemDetails();
-        });
+                var result = await sender.Send(new GetUserDetailQuery(userId));
+
+                return result.IsSuccess ? Results.Ok(result.Value) : result.ToProblemDetails();
+            });
     }
 }
